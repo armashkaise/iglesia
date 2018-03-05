@@ -41,16 +41,16 @@ function ale_enqueue_styles() {
 
 	// add general css file
 	wp_register_style( 'aletheme_general_css', THEME_URL . '/css/general.css', array(), ALETHEME_THEME_VERSION, 'all');
-    wp_register_style( 'jquery.jscrollpane', THEME_URL . '/css/jquery.jscrollpane.css', array(), ALETHEME_THEME_VERSION, 'all');
-    wp_register_style( 'jquery.fancybox-1.3.4', THEME_URL . '/css/jquery.fancybox-1.3.4.css', array(), ALETHEME_THEME_VERSION, 'all');
-    wp_enqueue_style('aletheme_general_css');
+	wp_register_style( 'aletheme_fontawesome', THEME_URL . '/css/font-awesome.min.css', array(), ALETHEME_THEME_VERSION, 'all');
+	wp_register_style( 'slick', THEME_URL . '/css/libs/slick.css', array(), ALETHEME_THEME_VERSION, 'all');
 
-    if(is_page_template('template-about.php') or is_page_template('template-award.php')){
-        wp_enqueue_style('jquery.jscrollpane');
-    }
-    if(is_page_template('template-press.php')){
-        wp_enqueue_style('jquery.fancybox-1.3.4');
-    }
+    wp_enqueue_style('aletheme_general_css');
+    wp_enqueue_style('aletheme_fontawesome');
+
+
+	if(is_page_template('template-about.php')) {
+		wp_enqueue_style('slick');
+	}
 }
 add_action( 'wp_enqueue_scripts', 'ale_enqueue_styles' );
 
@@ -86,10 +86,19 @@ function ale_enqueue_scripts() {
 
     wp_register_script( 'ale_modules', THEME_URL . '/js/modules.js', array( 'jquery' ), ALETHEME_THEME_VERSION, true );
     wp_register_script( 'ale_scripts', THEME_URL . '/js/scripts.js', array( 'jquery' ), ALETHEME_THEME_VERSION, true );
+    wp_register_script( 'slick', THEME_URL . '/js/libs/slick.min.js', array( 'jquery' ), ALETHEME_THEME_VERSION, true );
 
 	wp_enqueue_script( 'jquery-form' );
 	wp_enqueue_script( 'ale_modernizr' );
 	wp_enqueue_script( 'html5-shim' );
+	wp_enqueue_script( 'slick' );
+
+	if(is_post_type_archive('events')){
+		wp_enqueue_script( 'masonry' );
+	}
+
+
+
 
     wp_register_script( 'jquery.mousewheel', THEME_URL . '/js/libs/jquery.mousewheel.js', array( 'jquery' ), ALETHEME_THEME_VERSION, true );
     wp_register_script( 'jquery.fancybox', THEME_URL . '/js/libs/jquery.fancybox-1.3.4.pack.js', array( 'jquery' ), ALETHEME_THEME_VERSION, true );
@@ -141,7 +150,7 @@ function aletheme_comment_default($comment, $args, $depth) {
     ?>
 <<?php echo $tag ?> <?php comment_class(empty( $args['has_children'] ) ? '' : 'parent') ?> id="comment-<?php comment_ID() ?>">
     <?php if ( 'div' != $args['style'] ) : ?>
-		<div id="div-comment-<?php comment_ID() ?>" class="comment-body">
+		<div id="div-comment-<?php comment_ID() ?>" class="comment-body cf">
 	<?php endif; ?>
     <?php if ($depth > 1) { ?>
         <div class="comment2">
@@ -150,28 +159,23 @@ function aletheme_comment_default($comment, $args, $depth) {
         <div class="comment1">
     <?php } ?>
 
-        <div class="img">
-            <?php if ($args['avatar_size'] != 0) echo get_avatar( $comment, $args['avatar_size'] ); ?>
-        </div>
-        <div class="content">
-            <p class="time"><?php printf( __('%1$s at %2$s','aletheme'), get_comment_date(),  get_comment_time()) ?></p>
-            <p class="name"><?php printf(__('%s','aletheme'), get_comment_author_link()) ?></p>
-            <div class="text">
-                <?php if ($comment->comment_approved == '0') : ?>
-                    <em class="comment-awaiting-moderation"><?php _e('Your comment is awaiting moderation.','aletheme') ?></em>
-                    <br />
-                <?php endif; ?>
-                <?php comment_text() ?>
-            </div>
-            <?php if($depth == 1){ ?><a class="respond"><span class="icon"></span><?php comment_reply_link(array_merge( $args, array('add_below' => $add_below, 'depth' => $depth, 'max_depth' => $args['max_depth']))) ?></a><?php } ?>
-        </div>
-        <?php if ($depth > 1) { ?>
-            <div class="line-small"></div>
-        <?php } else { ?>
-            <div class="line"></div>
-        <?php } ?>
+		<div class="comment_info">
+			<div class="img">
+				<?php if ($args['avatar_size'] != 0) echo get_avatar( $comment, $args['avatar_size'] ); ?>
+			</div>
+			<div class="info">
+				<span class="name"><?php printf(__('%s','aletheme'), get_comment_author_link()) ?></span> <?php if($depth == 1){ ?><span class="respond"><?php comment_reply_link(array_merge( $args, array('add_below' => $add_below, 'depth' => $depth, 'max_depth' => $args['max_depth']))) ?> <i class="fa fa-reply" aria-hidden="true"></i></span><?php } ?><br />
+				<span class="time"><?php printf( __('%1$s at %2$s','aletheme'), get_comment_date(),  get_comment_time()) ?></span>
+			</div>
+		</div>
+		<div class="comment_data">
+			<?php if ($comment->comment_approved == '0') : ?>
+				<em class="comment-awaiting-moderation"><?php _e('Your comment is awaiting moderation.','aletheme') ?></em>
+				<br />
+			<?php endif; ?>
+			<?php comment_text() ?>
+		</div>
 
-        <div class="cf"></div>
     </div>
     <?php if ( 'div' != $args['style'] ) : ?>
 		</div>

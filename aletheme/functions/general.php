@@ -179,10 +179,11 @@ function ale_page_links() {
 		'format' => '',
 		'total' => $wp_query->max_num_pages,
 		'current' => $current,
-		'show_all' => true,
+		'show_all' => false,
 		'type' => 'list',
 		'next_text' => 'Следующие посты',
-		'prev_text' => 'Предыдущие посты'
+		'prev_text' => 'Предыдущие посты',
+        'prev_next' => false
 		);
  
 	if( $wp_rewrite->using_permalinks() )
@@ -1196,6 +1197,16 @@ if ( function_exists('register_sidebar') ) {
             'after_title' => '</p><div class="line"></div>',
         ));
 
+        register_sidebar(array(
+            'name' => 'Footer Sidebar',
+            'id' => 'footer-sidebar',
+            'description' => 'Appears as the footer sidebar on all pages',
+            'before_widget' => '<div id="%1$s" class="widget %2$s">',
+            'after_widget' => '</div>',
+            'before_title' => '<h5 class="footer_widget_title">',
+            'after_title' => '</h5>',
+        ));
+
 }
 
 //Support automatic-feed-links
@@ -1328,7 +1339,7 @@ function get_breadcrumbs() {
                 $post_type = get_post_type_object(get_post_type());
                 $slug = $post_type->rewrite;
                 printf($link, $home_link . '/' . $slug['slug'] . '/', $post_type->labels->singular_name);
-                if ($show_current == 1) echo $delimiter . $before . get_the_title() . $after;
+                if ($show_current == 1) echo $delimiter . $before . ale_truncate(get_the_title(),'70') . $after;
             } else {
                 $cat = get_the_category(); $cat = $cat[0];
                 $cats = get_category_parents($cat, TRUE, $delimiter);
@@ -1337,7 +1348,7 @@ function get_breadcrumbs() {
                 $cats = str_replace('</a>', '</a>' . $link_after, $cats);
                 if ($show_title == 0) $cats = preg_replace('/ title="(.*?)"/', '', $cats);
                 echo $cats;
-                if ($show_current == 1) echo $before . get_the_title() . $after;
+                if ($show_current == 1) echo $before . ale_truncate(get_the_title(),'70') . $after;
             }
 
         } elseif ( !is_single() && !is_page() && get_post_type() != 'post' && !is_404() ) {

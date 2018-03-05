@@ -3,18 +3,86 @@ jQuery(function($) {
 
     // Custom jQuery Code Here
 
+
+
+    //Parallax
+    var $window = $(window);
+    if($('section[data-type="background"]').length){
+        $('section[data-type="background"]').each(function(){
+
+            var $obj = $(this);
+            var offset = $obj.offset().top;
+
+            $(window).scroll(function()
+            {
+                offset = $obj.offset().top;
+
+                if ($window.scrollTop() > (offset - window.innerHeight))
+                {
+                    var yPos = -(($window.scrollTop() - offset) / 2 );
+                    var coords = '50% ' + ( yPos ) + 'px';
+                    $obj.css({ backgroundPosition:  coords });
+                }
+            });
+            $(window).resize(function()
+            {
+                offset = $obj.offset().top;
+            });
+        });
+    }
+
+
+    //People Slider
+    $('.peoples_list').slick({
+        infinite: true,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        nextArrow: '.right_arrow .right',
+        prevArrow: '.left_arrow .left'
+    });
+
+
+
     $('.portfolioslider').flexslider({
         animation:'slide',
         smoothHeight:true,
+        prevText:"<i class=\"fa fa-angle-left\" aria-hidden=\"true\"></i>",
+        nextText: "<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>",
         controlNav: false
     });
 
-    $('.newhomeslider').flexslider({
+    $('.homeslider').flexslider({
         animation:'slide',
-        smoothHeight:true,
+        //smoothHeight:true,
+        prevText:"<i class=\"fa fa-angle-left\" aria-hidden=\"true\"></i>",
+        nextText: "<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>",
         controlNav: false
     });
 
+
+    $('.homeslider .flex-viewport').css('overflow','visible');
+
+
+    $('.menu_icon i.fa-bars').on('click',function(){
+        $('.menu_icon i.fa-bars').css('display','none');
+        $('.menu_icon i.fa-times').css('display','inline-block');
+
+        $('.top_navigation').css('display','block');
+    });
+
+    $('.menu_icon i.fa-times').on('click',function(){
+        $('.menu_icon i.fa-bars').css('display','inline-block');
+        $('.menu_icon i.fa-times').css('display','none');
+
+        $('.top_navigation').css('display','none');
+    });
+
+
+    $('.latest-tweets').flexslider({
+        animation:'slide',
+        directionNav:false,
+        selector: "ul > li"
+    });
 });
 
 Modernizr.addTest('ipad', function () {
