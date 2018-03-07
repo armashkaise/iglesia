@@ -41,11 +41,13 @@ function ale_enqueue_styles() {
 
 	// add general css file
 	wp_register_style( 'aletheme_general_css', THEME_URL . '/css/general.css', array(), ALETHEME_THEME_VERSION, 'all');
-	wp_register_style( 'aletheme_fontawesome', THEME_URL . '/css/font-awesome.min.css', array(), ALETHEME_THEME_VERSION, 'all');
+	wp_register_style( 'aletheme_awesomefonts', THEME_URL . '/css/font-awesome.min.css', array(), ALETHEME_THEME_VERSION, 'all');
+	//wp_register_style( 'aletheme_fontawesome', THEME_URL . '/css/font-awesome.min.css', array(), ALETHEME_THEME_VERSION, 'all');
 	wp_register_style( 'slick', THEME_URL . '/css/libs/slick.css', array(), ALETHEME_THEME_VERSION, 'all');
 
     wp_enqueue_style('aletheme_general_css');
     wp_enqueue_style('aletheme_fontawesome');
+    wp_enqueue_style('aletheme_awesomefonts');
 
 
 	if(is_page_template('template-about.php')) {

@@ -194,10 +194,10 @@ function aletheme_get_options() {
                         "std" => "",
                         "type" => "text");
 	$options[] = array( "name" => "Facebook",
-						"desc" => "Your facebook profile URL.",
-						"id" => "ale_fb",
-						"std" => "",
-						"type" => "text");
+			"desc" => "Your facebook profile URL.",
+			"id" => "ale_fb",
+			"std" => "",
+			"type" => "text");
     $options[] = array( "name" => "Instagram",
                         "desc" => "Your instagram profile URL.",
                         "id" => "ale_insta",
